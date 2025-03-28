@@ -4,10 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProiectPaojApplication {
-
+public class TicketingApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ProiectPaojApplication.class, args);
+        SpringApplication.run(TicketingApplication.class, args);
     }
-
 }
