@@ -1,4 +1,4 @@
-package org.project.proiect_paoj;
+package org.ticketing;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
