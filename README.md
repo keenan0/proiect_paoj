@@ -46,15 +46,23 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 
 *TileLayer* reprezinta o configurare a modului de randare al hartii.
 
+*AccessCode* este o clasa abstracta care contine un cod de acces pentru fiecare eveniment. Acesta are doua derivate momentan: *QrAccessCode* si *CustomAccessCode*, care sunt folosite pentru a verifica daca un utilizator poate participa la un eveniment. 
+
+- [ ] Urmeaza sa adaug un Map care sa asocieze unui user mai multe evenimente la care participa + codul de acces.
+
 ### Actiuni/interogari:
 * Randeze dinamic cod javascript specific bibliotecii alese (metodele din LeafletMapService)
 * Sa permita operatii CRUD pentru evenimente (metodele din EventController)
 * Sa existe o modalitate de a configura in mod dinamic harta (metodele din MapConfig + MapConfigBuilder)
+* Fiecare eveniment are trei optiuni:
+  * Fara intrare
+  * Intrare generata cu cod QR
+  * Intrare generata cu un cod personalizat de catre organizator
 
 ### 2. Implementare
 
-- [ ] clase simple cu atribute private / protected si metode de acces;
+- [x] clase simple cu atribute private / protected si metode de acces; (clase + derivate)
 - [ ] cel putin 2 colectii diferite capabile sa gestioneze obiectele definite anterior (eg: List, Set, Map, etc.) dintre care cel putin una sa fie sortata.
-- [ ] utilizare mostenire pentru crearea de clase aditionale si utilizarea lor în cadrul colectiilor;
+- [x] utilizare mostenire pentru crearea de clase aditionale si utilizarea lor în cadrul colectiilor; (AccessCode + derivate)
 - [x] cel putin o clasa serviciu care sa expuna operatiile sistemului (LeafletMapService)
 - [x] o clasa Main din care sunt facute apeluri catre servici (TicketingApplication)
