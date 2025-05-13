@@ -19,4 +19,12 @@ public abstract class AccessCode {
     }
 
     public abstract void generate();
+
+    @Override
+    public String toString() {
+        return "AccessCode{" +
+                "code='" + code + '\'' +
+                ", generatedAt=" + generatedAt +
+                '}';
+    }
 }

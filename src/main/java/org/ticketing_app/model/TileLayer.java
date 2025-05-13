@@ -10,6 +10,9 @@ package org.ticketing_app.model;
         DONE in MapController: add enums for different tileLayers
  */
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class TileLayer {
     private String url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
     private String attribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors";

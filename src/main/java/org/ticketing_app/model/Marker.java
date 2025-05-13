@@ -7,6 +7,9 @@ package org.ticketing_app.model;
     - contains data for rendering a marker on the map
  */
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Marker {
     private double latitude;
     private double longitude;

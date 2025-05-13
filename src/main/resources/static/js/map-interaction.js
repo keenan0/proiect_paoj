@@ -49,6 +49,8 @@ document.addEventListener('mapReady', function (event) {
             return;
         }
 
+        const accessCode = document.getElementById('accessCodeType').value;
+
         const popupHtml = `
             <strong>${title}</strong><br>
             ${desc}<br>
@@ -63,13 +65,16 @@ document.addEventListener('mapReady', function (event) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                title,
-                description: desc,
-                marker: {
-                    latitude: selectedLatLng.lat,
-                    longitude: selectedLatLng.lng,
-                    popUp: popupHtml
-                }
+                event: {
+                    title: title,
+                    description: desc,
+                    marker: {
+                        latitude: selectedLatLng.lat,
+                        longitude: selectedLatLng.lng,
+                        popUp: popupHtml
+                    }
+                },
+                accessCode: accessCode
             })
         }).then(resp => {
             if (resp.ok) {
@@ -90,6 +95,13 @@ document.addEventListener('mapReady', function (event) {
 
     cancelEventBtn.addEventListener('click', () => {
         document.getElementById('eventForm').style.display = 'none';
+
+        selectedLatLng = null;
+
+        if(currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+
         addingEvent = false;
     });
 });
