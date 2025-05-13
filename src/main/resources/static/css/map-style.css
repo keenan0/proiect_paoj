@@ -4,25 +4,14 @@
     box-sizing:border-box;
 }
 
+:root {
+    --form-width: 300px;
+    --menu-width: 300px;
+}
+
 .map {
     width: 100vw;
     height: 100vh;
-}
-
-.event-form {
-    position: absolute;
-    top: 60px;
-
-    right: 10px;
-    background: #ffffff;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    z-index: 1000;
-    border-radius: 8px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .event-form input {
@@ -46,4 +35,83 @@
 #addEventBtn {
     background-color: #ff8c14;
     border: 2px solid black;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: var(--menu-width);
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    padding: 20px;
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.side-menu.active {
+    right: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.mapControls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1001;
+    transition: right 0.3s ease;
+}
+
+.mapControls.shifted {
+    right: calc(20px + var(--menu-width));
+}
+
+.mapControls button {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#eventForm {
+    position: fixed;
+    top: 10px;
+    right: -350px;
+    width: var(--form-width);
+    background: #ffffff;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    z-index: 999;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: right 0.3s ease;
+}
+
+#eventForm.active {
+    right: 10px;
+}
+
+body.menu-open.form-open #eventForm {
+    right: calc(10px + var(--form-width));
+}
+
+body.form-open .mapControls {
+    right: calc(20px + var(--form-width));
+}
+
+body.menu-open.form-open .mapControls {
+    right: calc(20px + var(--form-width) + var(--menu-width));
 }

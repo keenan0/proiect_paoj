@@ -4,21 +4,56 @@ document.addEventListener('mapReady', function (event) {
     const mapId = document.body.dataset.mapId;
     const map = window['leaf' + mapId];
 
+    const body = document.getElementsByTagName('body')[0];
+    const mapControls = document.querySelector('.mapControls');
     const addEventBtn = document.querySelector('#addEventBtn');
+    const openMenuBtn = document.querySelector('#openMenu');
+    const closeMenuBtn = document.querySelector('#closeMenu');
     const submitEventBtn = document.querySelector('#submitEventBtn');
     const cancelEventBtn = document.querySelector('#cancelEventBtn');
+    const sideMenu = document.querySelector('#sideMenu');
+    const eventForm = document.querySelector('#eventForm');
 
     const selectedLatLngLabel = document.querySelector('#selectedCoords');
 
     let addingEvent = false;
+    let sideMenuOpen = false;
     let selectedLatLng = null;
     let currentMarker = null;
 
+    openMenuBtn.addEventListener('click', function (e) {
+        sideMenu.classList.toggle('active');
+        sideMenuOpen = !sideMenuOpen;
+        mapControls.classList.toggle('shifted');
+        body.classList.toggle('menu-open');
+    })
+
+    closeMenuBtn.addEventListener('click', function (e) {
+        sideMenu.classList.toggle('active');
+        sideMenuOpen = !sideMenuOpen;
+        mapControls.classList.toggle('shifted');
+        body.classList.toggle('menu-open');
+    })
+
     addEventBtn.addEventListener('click', () => {
-        addingEvent = true;
-        selectedLatLng = null;
-        selectedLatLngLabel.innerText = 'Location: ❌';
-        document.getElementById('eventForm').style.display = 'flex';
+        eventForm.classList.toggle('active');
+        body.classList.toggle('form-open');
+
+        if (addingEvent) {
+            addingEvent = false;
+
+            if(currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            selectedLatLng = null;
+            // document.getElementById('eventForm').style.display = 'none';
+        } else {
+            addingEvent = true;
+            selectedLatLng = null;
+            selectedLatLngLabel.innerText = 'Location: ❌';
+            // document.getElementById('eventForm').style.display = 'flex';
+        }
     });
 
     map.on('click', function (e) {
@@ -45,7 +80,7 @@ document.addEventListener('mapReady', function (event) {
         const desc = document.getElementById('eventDesc').value;
 
         if (!title || !desc) {
-            // Title or desc is not selected
+            selectedLatLngLabel.innerText = `Title or description is empty.`;
             return;
         }
 
@@ -88,13 +123,18 @@ document.addEventListener('mapReady', function (event) {
             document.getElementById('eventDesc').value = '';
             document.getElementById('selectedCoords').innerText = 'Location: ❌';
 
-            document.getElementById('eventForm').style.display = 'none';
+            // document.getElementById('eventForm').style.display = 'none';
             addingEvent = false;
+
+            eventForm.classList.toggle('active');
+            body.classList.toggle('form-open');
         });
     });
 
     cancelEventBtn.addEventListener('click', () => {
-        document.getElementById('eventForm').style.display = 'none';
+        // document.getElementById('eventForm').style.display = 'none';
+        eventForm.classList.toggle('active');
+        body.classList.toggle('form-open');
 
         selectedLatLng = null;
 
