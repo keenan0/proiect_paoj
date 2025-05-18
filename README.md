@@ -66,3 +66,28 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 - [x] utilizare mostenire pentru crearea de clase aditionale si utilizarea lor în cadrul colectiilor; (AccessCode + derivate)
 - [x] cel putin o clasa serviciu care sa expuna operatiile sistemului (LeafletMapService)
 - [x] o clasa Main din care sunt facute apeluri catre servici (TicketingApplication)
+
+# Etapa II
+
+### TODO:
+- [x] Implementarea unei baze de date folosind JDBC si H2
+- [x] Integrare user authentication
+- [ ] Construirea unei baze de date
+- [ ] Servicii CRUD pentru 4 clase
+- [ ] Servicii singleton pentru r/w in baza de date
+- [ ] Serviciu de audit CSV pentru fiecare actiune definita la etapa I
+
+### Misc:
+- [ ] Cand un eveniment este highlighted, vor aparea detalii despre acesta in #sideMenu
+- [ ] Un nou meniu pentru a vizualiza toate evenimentele active
+- [ ] In #sideMenu un search bar pentru a cauta evenimente dupa nume, locatie, etc.
+- [ ] Un nou meniu pentru vizualizarea profilului (dinamic/pagina proprie)
+- [ ] 
+
+### Detalii implementare user
+
+* Un user poate avea un singur eveniment activ (ca si host)
+  * Daca nu are niciun eveniment, poate adauga unul
+  * Daca are un eveniment activ, cand apasa pe butonul "+" acesta va fi informat de limita evenimentelor active
+* Un user poate participa la oricate evenimente doreste (ca si client)
+* Un user poate sa isi modifice datele profilului

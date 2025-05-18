@@ -6,7 +6,7 @@
 
 :root {
     --form-width: 300px;
-    --menu-width: 300px;
+    --menu-width: 400px;
 }
 
 .map {
@@ -40,7 +40,7 @@
 .side-menu {
     position: fixed;
     top: 0;
-    right: -300px;
+    right: calc(-1 * var(--menu-width));
     width: var(--menu-width);
     height: 100%;
     background-color: #fff;
@@ -87,7 +87,7 @@
 #eventForm {
     position: fixed;
     top: 10px;
-    right: -350px;
+    right: calc(-1 * var(--form-width) - 50px);
     width: var(--form-width);
     background: #ffffff;
     padding: 15px;
@@ -105,7 +105,7 @@
 }
 
 body.menu-open.form-open #eventForm {
-    right: calc(10px + var(--form-width));
+    right: calc(10px + var(--menu-width));
 }
 
 body.form-open .mapControls {

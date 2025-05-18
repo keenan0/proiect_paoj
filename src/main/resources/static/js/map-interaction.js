@@ -6,11 +6,13 @@ document.addEventListener('mapReady', function (event) {
 
     const body = document.getElementsByTagName('body')[0];
     const mapControls = document.querySelector('.mapControls');
+
     const addEventBtn = document.querySelector('#addEventBtn');
     const openMenuBtn = document.querySelector('#openMenu');
     const closeMenuBtn = document.querySelector('#closeMenu');
     const submitEventBtn = document.querySelector('#submitEventBtn');
     const cancelEventBtn = document.querySelector('#cancelEventBtn');
+
     const sideMenu = document.querySelector('#sideMenu');
     const eventForm = document.querySelector('#eventForm');
 
@@ -47,12 +49,10 @@ document.addEventListener('mapReady', function (event) {
             }
 
             selectedLatLng = null;
-            // document.getElementById('eventForm').style.display = 'none';
         } else {
             addingEvent = true;
             selectedLatLng = null;
             selectedLatLngLabel.innerText = 'Location: ❌';
-            // document.getElementById('eventForm').style.display = 'flex';
         }
     });
 
@@ -123,7 +123,6 @@ document.addEventListener('mapReady', function (event) {
             document.getElementById('eventDesc').value = '';
             document.getElementById('selectedCoords').innerText = 'Location: ❌';
 
-            // document.getElementById('eventForm').style.display = 'none';
             addingEvent = false;
 
             eventForm.classList.toggle('active');
@@ -132,7 +131,6 @@ document.addEventListener('mapReady', function (event) {
     });
 
     cancelEventBtn.addEventListener('click', () => {
-        // document.getElementById('eventForm').style.display = 'none';
         eventForm.classList.toggle('active');
         body.classList.toggle('form-open');
 
