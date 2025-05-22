@@ -16,12 +16,27 @@ document.addEventListener('mapReady', function (event) {
     const sideMenu = document.querySelector('#sideMenu');
     const eventForm = document.querySelector('#eventForm');
 
+    const menuItems = document.querySelector('#menuItems');
     const selectedLatLngLabel = document.querySelector('#selectedCoords');
 
     let addingEvent = false;
     let sideMenuOpen = false;
     let selectedLatLng = null;
     let currentMarker = null;
+
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.Marker) {
+            layer.on('click', function () {
+                // Load the events at selected marker through api call
+
+
+                if(!sideMenuOpen) {
+                    sideMenuOpen = true;
+                    sideMenu.classList.toggle('active');
+                }
+            });
+        }
+    });
 
     openMenuBtn.addEventListener('click', function (e) {
         sideMenu.classList.toggle('active');
@@ -91,7 +106,7 @@ document.addEventListener('mapReady', function (event) {
             ${desc}<br>
         `;
 
-        L.marker([selectedLatLng.lat, selectedLatLng.lng])
+        const marker = L.marker([selectedLatLng.lat, selectedLatLng.lng])
             .addTo(map)
             .bindPopup(popupHtml)
             .openPopup();

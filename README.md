@@ -72,9 +72,9 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 ### TODO:
 - [x] Implementarea unei baze de date folosind JDBC si H2
 - [x] Integrare user authentication
-- [ ] Construirea unei baze de date
+- [x] Construirea unei baze de date
 - [ ] Servicii CRUD pentru 4 clase
-- [ ] Servicii singleton pentru r/w in baza de date
+- [x] Servicii singleton pentru r/w in baza de date (UserService)
 - [ ] Serviciu de audit CSV pentru fiecare actiune definita la etapa I
 
 ### Misc:

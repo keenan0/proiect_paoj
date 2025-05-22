@@ -6,3 +6,28 @@ CREATE TABLE IF NOT EXISTS USERS (
     ENABLED BOOLEAN DEFAULT TRUE,
     ROLE VARCHAR(20) DEFAULT 'ROLE_USER'
 );
+
+CREATE TABLE marker (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+    popup VARCHAR(255)
+);
+
+CREATE TABLE event (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    marker_id BIGINT,
+    posted_user_id BIGINT,
+    FOREIGN KEY (marker_id) REFERENCES marker(id) ON DELETE SET NULL,
+    FOREIGN KEY (posted_user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE access_code (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(100) NOT NULL,
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    event_id BIGINT,
+    FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE
+);

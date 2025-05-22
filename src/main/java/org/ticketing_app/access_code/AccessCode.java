@@ -3,6 +3,7 @@ package org.ticketing_app.access_code;
 import java.time.LocalDateTime;
 
 public abstract class AccessCode {
+    protected long id;
     protected String code;
     protected LocalDateTime generatedAt;
 

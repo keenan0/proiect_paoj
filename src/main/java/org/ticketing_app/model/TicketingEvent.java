@@ -5,9 +5,12 @@ import org.ticketing_app.access_code.AccessCode;
 
 @Component
 public class TicketingEvent {
+    private long id;
     private String title;
     private String description;
+
     private Marker marker;
+    private User user;
 
     private AccessCode accessCode;
 
@@ -20,6 +23,7 @@ public class TicketingEvent {
         this.marker = marker;
 
         this.accessCode = null;
+        this.user = null;
     }
 
     public TicketingEvent(String title, String description, Marker marker, AccessCode accessCode) {
@@ -29,6 +33,17 @@ public class TicketingEvent {
         this.marker = marker;
 
         this.accessCode = accessCode;
+        this.user = null;
+    }
+
+    public TicketingEvent(String title, String description, Marker marker, AccessCode accessCode, User user) {
+        // Constructor with access code
+        this.title = title;
+        this.description = description;
+        this.marker = marker;
+
+        this.accessCode = accessCode;
+        this.user = user;
     }
 
     public String getTitle() { return title; }
@@ -39,6 +54,12 @@ public class TicketingEvent {
 
     public Marker getMarker() { return marker; }
     public void setMarker(Marker marker) { this.marker = marker; }
+
+    public long getId() {return id;}
+    public void setId(long id) {this.id = id;}
+
+    public User getUser() {return user;}
+    public void setUser(User user) {this.user = user;}
 
     public void setAccessCode(AccessCode accessCode) { this.accessCode = accessCode; }
     public AccessCode getAccessCode() { return accessCode; }

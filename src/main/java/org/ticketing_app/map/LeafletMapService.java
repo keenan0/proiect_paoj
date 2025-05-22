@@ -39,6 +39,7 @@ public class LeafletMapService {
         for (TicketingEvent event : config.getEvents()) {
             Marker marker = event.getMarker();
 
+            // old: "L.marker([%.6f, %.6f]).addTo(%s).bindPopup('%s');\n",
             js.append(String.format(
                     Locale.US,
                     "L.marker([%.6f, %.6f]).addTo(%s).bindPopup('%s');\n",

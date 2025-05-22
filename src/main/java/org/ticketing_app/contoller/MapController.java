@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.ticketing_app.map.LeafletMapService;
 import org.ticketing_app.map.MapConfig;
 import org.ticketing_app.map.MapConfigBuilder;
+import org.ticketing_app.model.TicketingEvent;
+import org.ticketing_app.services.TicketingEventService;
+
+import java.util.List;
 
 enum TILE_LAYER_TYPE {
     DEFAULT(
@@ -34,23 +38,29 @@ enum TILE_LAYER_TYPE {
 @Controller
 public class MapController {
     private final LeafletMapService mapService;
+    private final TicketingEventService eventService;
 
-    public MapController(LeafletMapService mapService) {
+    public MapController(LeafletMapService mapService, TicketingEventService eventService) {
         this.mapService = mapService;
+        this.eventService = eventService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
         System.out.println("Hit index controller");
 
-        MapConfig mapConfig = new MapConfigBuilder( "map",  44.434891, 26.080374, 20)
-                .useTileLayer(TILE_LAYER_TYPE.VOYAGER.getUrl(),
-                        TILE_LAYER_TYPE.VOYAGER.getAttribution())
-                .addEvent("","",44.435726, 26.07958, "Opera Nationala")
-                .addEvent("","",44.434929, 26.079547, "Parcul Operei")
-                .build();
+        MapConfigBuilder mapBuilder = new MapConfigBuilder("map", 44.434891, 26.080374, 20)
+                .useTileLayer(TILE_LAYER_TYPE.VOYAGER.getUrl(), TILE_LAYER_TYPE.VOYAGER.getAttribution());
 
-        System.out.println("Hit index controller!");
+        // Fetch all events from DB
+        List<TicketingEvent> events = eventService.getAllEvents();
+
+        // Add each event to the map
+        for (TicketingEvent event : events) {
+            mapBuilder.addEvent(event);
+        }
+
+        MapConfig mapConfig = mapBuilder.build();
 
         model.addAttribute("mapId", mapConfig.getMapId());
         model.addAttribute("mapDiv", mapService.generateMapDiv(mapConfig));

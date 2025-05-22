@@ -25,6 +25,7 @@ public class MapConfigBuilder {
         return this;
     }
 
+    //FIX LATER
     public MapConfigBuilder addEvent(String title, String desc, double latitude, double longitude, String popup) {
         Marker marker = new Marker();
         marker.setLatitude(latitude);
@@ -33,6 +34,12 @@ public class MapConfigBuilder {
 
         TicketingEvent event = new TicketingEvent(title, desc, marker);
 
+        mapConfig.getEvents().add(event);
+
+        return this;
+    }
+
+    public MapConfigBuilder addEvent(TicketingEvent event) {
         mapConfig.getEvents().add(event);
 
         return this;
