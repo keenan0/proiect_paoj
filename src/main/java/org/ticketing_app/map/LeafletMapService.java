@@ -9,7 +9,7 @@ import java.util.Locale;
 
 @Service
 public class LeafletMapService {
-    private final HashSet<Marker> renderedMarkers = new HashSet<>();
+    private HashSet<Marker> renderedMarkers = new HashSet<>();
 
     public String generateMapDiv(MapConfig config) {
         return String.format(
@@ -39,6 +39,7 @@ public class LeafletMapService {
                 tileLayer.getUrl(), tileLayer.getAttribution(), mapName
         ));
 
+        renderedMarkers = new HashSet<>();
         for (TicketingEvent event : config.getEvents()) {
             Marker marker = event.getMarker();
 

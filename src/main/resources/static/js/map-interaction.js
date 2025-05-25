@@ -48,18 +48,26 @@ document.addEventListener('mapReady', function (event) {
 
     const addEventBtn = document.querySelector('#addEventBtn');
     const openMenuBtn = document.querySelector('#openMenu');
+    const eventsOpenMenuBtn = document.querySelector('#eventsMenu');
+
+    const eventsCloseMenuBtn = document.querySelector('#eventsCloseMenu');
     const closeMenuBtn = document.querySelector('#closeMenu');
     const submitEventBtn = document.querySelector('#submitEventBtn');
     const cancelEventBtn = document.querySelector('#cancelEventBtn');
 
     const sideMenu = document.querySelector('#sideMenu');
+    const eventsSideMenu = document.querySelector('#eventsSideMenu');
     const eventForm = document.querySelector('#eventForm');
 
     const menuItems = document.querySelector('#menuItems');
+    const eventsMenuItems = document.querySelector('#eventsMenuItems');
     const selectedLatLngLabel = document.querySelector('#selectedCoords');
 
     let addingEvent = false;
     let sideMenuOpen = false;
+    let eventsSideMenuOpen = false;
+    let mapControlsShifted = false;
+
     let selectedLatLng = null;
     let currentMarker = null;
 
@@ -93,14 +101,51 @@ document.addEventListener('mapReady', function (event) {
         }
     });
 
+    eventsOpenMenuBtn.addEventListener('click', function () {
+        if(sideMenuOpen) {
+            sideMenu.classList.toggle('active');
+            sideMenuOpen = false;
+        } else {
+            mapControls.classList.toggle('shifted');
+            body.classList.toggle('menu-open');
+        }
+
+        eventsSideMenu.classList.toggle('active');
+        eventsSideMenuOpen = !eventsSideMenuOpen;
+    })
+
     openMenuBtn.addEventListener('click', function (e) {
+        if(eventsSideMenuOpen) {
+            eventsSideMenu.classList.toggle('active');
+            eventsSideMenuOpen = false;
+        } else {
+            mapControls.classList.toggle('shifted');
+            body.classList.toggle('menu-open');
+        }
+
         sideMenu.classList.toggle('active');
         sideMenuOpen = !sideMenuOpen;
+    })
+
+    eventsCloseMenuBtn.addEventListener('click', function(e) {
+        if(sideMenuOpen) {
+            sideMenu.classList.toggle('active');
+            sideMenuOpen = false;
+        }
+
+        eventsSideMenu.classList.toggle('active');
+        eventsSideMenuOpen = !eventsSideMenuOpen;
+
         mapControls.classList.toggle('shifted');
         body.classList.toggle('menu-open');
     })
 
     closeMenuBtn.addEventListener('click', function (e) {
+        if(eventsSideMenuOpen) {
+            eventsSideMenu.classList.toggle('active');
+            sideMenuOpen = false;
+        }
+
         sideMenu.classList.toggle('active');
         sideMenuOpen = !sideMenuOpen;
         mapControls.classList.toggle('shifted');
