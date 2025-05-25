@@ -1,3 +1,42 @@
+function renderEvents(events, menuDiv) {
+    /*
+    *   Used by the fetch call / get request to /api/events when a marker is clicked.
+    *
+    *   @events - list of TicketingEvent returned by the api call
+    *   @menuDiv - the div where the data should be added
+    * */
+
+    menuDiv.innerHTML = ''; // Clear previous content
+
+    if (events.length === 0) {
+        menuDiv.innerHTML = '<p>No events found for this marker.</p>';
+        return;
+    }
+
+    events.forEach(event => {
+        const eventDiv = document.createElement('div');
+        eventDiv.classList.add('event');
+
+        const title = document.createElement('h5');
+        title.textContent = event.title;
+
+        const desc = document.createElement('p');
+        desc.textContent = event.description;
+
+        const button = document.createElement('button');
+        button.textContent = 'View Details';
+        button.onclick = () => {
+            alert(`Event ID: ${event.id}`);
+        };
+
+        eventDiv.appendChild(title);
+        eventDiv.appendChild(desc);
+        eventDiv.appendChild(button);
+
+        menuDiv.appendChild(eventDiv);
+    });
+}
+
 document.addEventListener('mapReady', function (event) {
     console.log("Map is ready.");
 
@@ -28,11 +67,27 @@ document.addEventListener('mapReady', function (event) {
         if (layer instanceof L.Marker) {
             layer.on('click', function () {
                 // Load the events at selected marker through api call
+                const markerId = layer.options.markerId;
 
+                console.log(markerId);
 
-                if(!sideMenuOpen) {
+                // Make GET call to Spring Boot API
+                fetch(`/api/events?markerId=${markerId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        renderEvents(data, menuItems);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching events:', error);
+                        menuItems.innerHTML = '<p>Error loading events.</p>';
+                    });
+
+                if (!sideMenuOpen) {
                     sideMenuOpen = true;
                     sideMenu.classList.toggle('active');
+                    mapControls.classList.toggle('shifted');
+                    body.classList.toggle('menu-open');
                 }
             });
         }
@@ -119,6 +174,7 @@ document.addEventListener('mapReady', function (event) {
                     title: title,
                     description: desc,
                     marker: {
+                        id: 0,
                         latitude: selectedLatLng.lat,
                         longitude: selectedLatLng.lng,
                         popUp: popupHtml
@@ -131,6 +187,7 @@ document.addEventListener('mapReady', function (event) {
                 alert("Event added!");
             } else {
                 alert("Failed to add event.");
+                console.log(resp);
             }
 
             // Reset the values

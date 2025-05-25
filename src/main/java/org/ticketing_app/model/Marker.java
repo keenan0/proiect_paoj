@@ -10,6 +10,8 @@ package org.ticketing_app.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 public class Marker {
     private long id;
     private double latitude;
@@ -69,5 +71,18 @@ public class Marker {
                 ", longitude=" + longitude +
                 ", popUp='" + popUp + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Marker marker = (Marker) o;
+        return Objects.equals(id, marker.id); 
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

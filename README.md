@@ -48,7 +48,7 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 
 *AccessCode* este o clasa abstracta care contine un cod de acces pentru fiecare eveniment. Acesta are doua derivate momentan: *QrAccessCode* si *CustomAccessCode*, care sunt folosite pentru a verifica daca un utilizator poate participa la un eveniment. 
 
-- [ ] Urmeaza sa adaug un Map care sa asocieze unui user mai multe evenimente la care participa + codul de acces.
+* [x] Un set care retine markerele randate in LeafletMapService
 
 ### Actiuni/interogari:
 * Randeze dinamic cod javascript specific bibliotecii alese (metodele din LeafletMapService)
@@ -62,7 +62,7 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 ### 2. Implementare
 
 - [x] clase simple cu atribute private / protected si metode de acces; (clase + derivate)
-- [ ] cel putin 2 colectii diferite capabile sa gestioneze obiectele definite anterior (eg: List, Set, Map, etc.) dintre care cel putin una sa fie sortata.
+- [x] cel putin 2 colectii diferite capabile sa gestioneze obiectele definite anterior (eg: List, Set, Map, etc.) dintre care cel putin una sa fie sortata.
 - [x] utilizare mostenire pentru crearea de clase aditionale si utilizarea lor în cadrul colectiilor; (AccessCode + derivate)
 - [x] cel putin o clasa serviciu care sa expuna operatiile sistemului (LeafletMapService)
 - [x] o clasa Main din care sunt facute apeluri catre servici (TicketingApplication)
@@ -74,15 +74,14 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 - [x] Integrare user authentication
 - [x] Construirea unei baze de date
 - [ ] Servicii CRUD pentru 4 clase
-- [x] Servicii singleton pentru r/w in baza de date (UserService)
+- [x] Servicii singleton pentru r/w in baza de date (Orice + Service)
 - [ ] Serviciu de audit CSV pentru fiecare actiune definita la etapa I
 
 ### Misc:
-- [ ] Cand un eveniment este highlighted, vor aparea detalii despre acesta in #sideMenu
+- [x] Cand un eveniment este highlighted, vor aparea detalii despre acesta in #sideMenu
 - [ ] Un nou meniu pentru a vizualiza toate evenimentele active
 - [ ] In #sideMenu un search bar pentru a cauta evenimente dupa nume, locatie, etc.
 - [ ] Un nou meniu pentru vizualizarea profilului (dinamic/pagina proprie)
-- [ ] 
 
 ### Detalii implementare user
 

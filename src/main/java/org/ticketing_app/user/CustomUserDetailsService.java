@@ -29,14 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 new UsernameNotFoundException("User not found with username: " + username)
         );
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.isEnabled(),
-                true, // account non-expired
-                true, // credentials non-expired
-                true, // account non-locked
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole()))
-        );
+        return new CustomUserDetails(user);
     }
 }

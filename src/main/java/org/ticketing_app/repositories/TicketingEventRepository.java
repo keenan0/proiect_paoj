@@ -26,7 +26,7 @@ public class TicketingEventRepository {
     }
 
     public TicketingEvent save(TicketingEvent event) {
-        // Salvează markerul (îl inserează sau actualizează)
+        // Saves/inserts a new event
         Marker marker = markerRepository.save(event.getMarker());
 
         String sql = "INSERT INTO event (title, description, marker_id, posted_user_id) VALUES (?, ?, ?, ?)";
@@ -152,4 +152,37 @@ public class TicketingEventRepository {
             return ev;
         }, userId);
     }
+
+    public List<TicketingEvent> findByMarkerId(Long markerId) {
+        String sql = """
+            SELECT e.id AS event_id, e.title, e.description,
+                   e.marker_id,
+                   u.id AS user_id, u.username, u.password, u.email, u.role, u.enabled
+            FROM event e
+            JOIN users u ON e.posted_user_id = u.id
+            WHERE e.marker_id = ?
+            """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Marker marker = markerRepository.findById(markerId); // optional: optimize if reused in loop
+
+            User user = new User(
+                    rs.getLong("user_id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("email"),
+                    rs.getBoolean("enabled"),
+                    rs.getString("role")
+            );
+
+            TicketingEvent ev = new TicketingEvent();
+            ev.setId(rs.getLong("event_id"));
+            ev.setTitle(rs.getString("title"));
+            ev.setDescription(rs.getString("description"));
+            ev.setMarker(marker);
+            ev.setUser(user);
+            return ev;
+        }, markerId);
+    }
+
 }

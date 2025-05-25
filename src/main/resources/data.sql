@@ -12,3 +12,12 @@ Language Italiană Subtitles DA Premiere 12 septembrie 1996 World premiere 24 de
 
 INSERT INTO event (title, description, marker_id, posted_user_id)
 VALUES ('Nabucco - 11 Iunie', 'Giuseppe Verdi Libretto Temistocle Solera Duration 3h Breaks 2 Language italian Subtitles Romanian Premiere 31st of October 1987 World premiere 9th March 1842, Teatro alla Scala Milano', 1, 1);
+
+INSERT INTO event (title, description, marker_id, posted_user_id)
+VALUES ('Turandot - 20 Iunie', 'BUCHAREST OPERA FESTIVAL 2025 Ediția a IV-a Opera Națională Română Iași Dirijor: David Crescenzi', 1, 1);
+
+INSERT INTO event (title, description, marker_id, posted_user_id)
+VALUES ('Nabucco - 11 Iunie', 'Giuseppe Verdi Libretto Temistocle Solera Duration 3h Breaks 2 Language italian Subtitles Romanian Premiere 31st of October 1987 World premiere 9th March 1842, Teatro alla Scala Milano', 1, 1);
+
+INSERT INTO event (title, description, marker_id, posted_user_id)
+VALUES ('Turandot - 20 Iunie', 'BUCHAREST OPERA FESTIVAL 2025 Ediția a IV-a Opera Națională Română Iași Dirijor: David Crescenzi', 1, 1);

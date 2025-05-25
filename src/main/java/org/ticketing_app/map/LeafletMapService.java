@@ -4,10 +4,13 @@ import org.ticketing_app.model.TicketingEvent;
 import org.ticketing_app.model.TileLayer;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Locale;
 
 @Service
 public class LeafletMapService {
+    private final HashSet<Marker> renderedMarkers = new HashSet<>();
+
     public String generateMapDiv(MapConfig config) {
         return String.format(
                 "<div class=\"map\" id=\"%s\"></div>",
@@ -39,14 +42,18 @@ public class LeafletMapService {
         for (TicketingEvent event : config.getEvents()) {
             Marker marker = event.getMarker();
 
-            // old: "L.marker([%.6f, %.6f]).addTo(%s).bindPopup('%s');\n",
-            js.append(String.format(
-                    Locale.US,
-                    "L.marker([%.6f, %.6f]).addTo(%s).bindPopup('%s');\n",
-                    marker.getLatitude(), marker.getLongitude(),
-                    mapName,
-                    marker.getPopUp()
-            ));
+            if(!renderedMarkers.contains(marker)) {
+                js.append(String.format(
+                        Locale.US,
+                        "L.marker([%.6f, %.6f], { markerId: %d }).addTo(%s).bindPopup('%s');\n",
+                        marker.getLatitude(), marker.getLongitude(),
+                        marker.getId(),
+                        mapName,
+                        marker.getPopUp()
+                ));
+
+                renderedMarkers.add(marker);
+            }
         }
 
         js.append(String.format(

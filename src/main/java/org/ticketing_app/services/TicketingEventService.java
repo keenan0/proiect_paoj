@@ -18,4 +18,12 @@ public class TicketingEventService {
     public List<TicketingEvent> getAllEvents() {
         return eventRepository.findAll();
     }
+
+    public List<TicketingEvent> getEventsByMarker(Long markerId) {
+        return eventRepository.findByMarkerId(markerId);
+    }
+
+    public TicketingEvent saveOrUpdate(TicketingEvent event) {
+        return eventRepository.save(event);
+    }
 }
