@@ -1,5 +1,6 @@
 package org.ticketing_app.contoller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +8,7 @@ import org.ticketing_app.map.LeafletMapService;
 import org.ticketing_app.map.MapConfig;
 import org.ticketing_app.map.MapConfigBuilder;
 import org.ticketing_app.model.TicketingEvent;
+import org.ticketing_app.services.AuditService;
 import org.ticketing_app.services.TicketingEventService;
 
 import java.util.List;
@@ -40,6 +42,9 @@ public class MapController {
     private final LeafletMapService mapService;
     private final TicketingEventService eventService;
 
+    @Autowired
+    private AuditService auditService;
+
     public MapController(LeafletMapService mapService, TicketingEventService eventService) {
         this.mapService = mapService;
         this.eventService = eventService;
@@ -49,7 +54,7 @@ public class MapController {
     public String index(Model model) {
         System.out.println("Hit index controller");
 
-        MapConfigBuilder mapBuilder = new MapConfigBuilder("map", 44.434891, 26.080374, 20)
+        MapConfigBuilder mapBuilder = new MapConfigBuilder("map", 44.434891, 26.080374, 20, auditService)
                 .useTileLayer(TILE_LAYER_TYPE.VOYAGER.getUrl(), TILE_LAYER_TYPE.VOYAGER.getAttribution());
 
         // Fetch all events from DB

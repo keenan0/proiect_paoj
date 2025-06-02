@@ -1,8 +1,10 @@
 package org.ticketing_app.map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.ticketing_app.model.Marker;
 import org.ticketing_app.model.TicketingEvent;
 import org.ticketing_app.model.TileLayer;
 import org.springframework.stereotype.Service;
+import org.ticketing_app.services.AuditService;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -10,6 +12,9 @@ import java.util.Locale;
 @Service
 public class LeafletMapService {
     private HashSet<Marker> renderedMarkers = new HashSet<>();
+
+    @Autowired
+    private AuditService auditService;
 
     public String generateMapDiv(MapConfig config) {
         return String.format(
@@ -19,6 +24,7 @@ public class LeafletMapService {
     }
 
     public String generateMapScript(MapConfig config) {
+        auditService.logAction("LeafletMapService: Generated script");
         StringBuilder js = new StringBuilder();
 
         String mapName = "leaf" + config.getMapId();

@@ -73,7 +73,7 @@ Pentru randarea hartii vom folosi Leaflet, o biblioteca javascript.
 - [x] Implementarea unei baze de date folosind JDBC si H2
 - [x] Integrare user authentication
 - [x] Construirea unei baze de date
-- [ ] Servicii CRUD pentru 4 clase
+- [x] Servicii CRUD pentru 4 clase
 - [x] Servicii singleton pentru r/w in baza de date (Orice + Service)
 - [ ] Serviciu de audit CSV pentru fiecare actiune definita la etapa I
 

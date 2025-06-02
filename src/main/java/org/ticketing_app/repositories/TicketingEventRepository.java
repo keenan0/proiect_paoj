@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.ticketing_app.model.Marker;
 import org.ticketing_app.model.TicketingEvent;
 import org.ticketing_app.model.User;
+import org.ticketing_app.services.MarkerService;
 
 import java.sql.*;
 import java.util.*;
@@ -17,17 +18,17 @@ import java.util.*;
 public class TicketingEventRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final MarkerRepository markerRepository;
+    private final MarkerService markerService;
 
     @Autowired
-    public TicketingEventRepository(JdbcTemplate jdbcTemplate, MarkerRepository markerRepository) {
+    public TicketingEventRepository(JdbcTemplate jdbcTemplate, MarkerService markerService) {
         this.jdbcTemplate = jdbcTemplate;
-        this.markerRepository = markerRepository;
+        this.markerService = markerService;
     }
 
     public TicketingEvent save(TicketingEvent event) {
         // Saves/inserts a new event
-        Marker marker = markerRepository.save(event.getMarker());
+        Marker marker = markerService.saveOrUpdate(event.getMarker());
 
         String sql = "INSERT INTO event (title, description, marker_id, posted_user_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -58,7 +59,7 @@ public class TicketingEventRepository {
         try {
             TicketingEvent event = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
                 long markerId = rs.getLong("marker_id");
-                Marker marker = markerRepository.findById(markerId);
+                Marker marker = markerService.findById(markerId);
 
                 User user = new User(
                         rs.getLong("user_id"),
@@ -95,7 +96,7 @@ public class TicketingEventRepository {
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             long markerId = rs.getLong("marker_id");
-            Marker marker = markerRepository.findById(markerId);
+            Marker marker = markerService.findById(markerId);
 
             User user = new User(
                     rs.getLong("user_id"),
@@ -132,7 +133,7 @@ public class TicketingEventRepository {
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             long markerId = rs.getLong("marker_id");
-            Marker marker = markerRepository.findById(markerId);
+            Marker marker = markerService.findById(markerId);
 
             User user = new User(
                     rs.getLong("user_id"),
@@ -164,7 +165,7 @@ public class TicketingEventRepository {
             """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Marker marker = markerRepository.findById(markerId); // optional: optimize if reused in loop
+            Marker marker = markerService.findById(markerId); // optional: optimize if reused in loop
 
             User user = new User(
                     rs.getLong("user_id"),

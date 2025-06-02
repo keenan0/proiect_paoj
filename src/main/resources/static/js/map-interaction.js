@@ -88,13 +88,30 @@ document.addEventListener('mapReady', function (event) {
     let selectedLatLng = null;
     let currentMarker = null;
 
+    const existingMarkers = {}; // Key: "lat,lng" -> Val: marker
+
+    function addMarkerIfNotExists(lat, lng, popupHtml, onClickCallback) {
+        const key = `${lat.toFixed(5)},${lng.toFixed(5)}`;
+
+        if (existingMarkers[key]) {
+            console.log('Marker already exists at this location.');
+            return existingMarkers[key];
+        }
+
+        const marker = L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(popupHtml)
+            .on('click', onClickCallback);
+
+        existingMarkers[key] = marker;
+        return marker;
+    }
+
     map.eachLayer(function(layer) {
         if (layer instanceof L.Marker) {
             layer.on('click', function () {
                 // Load the events at selected marker through api call
                 const markerId = layer.options.markerId;
-
-                console.log(markerId);
 
                 // Make GET call to Spring Boot API
                 fetch(`/api/events?markerId=${markerId}`)
@@ -253,7 +270,7 @@ document.addEventListener('mapReady', function (event) {
             .then(marker => {
                 returned_marker = marker;
                 alert("Event added! Marker ID: " + marker.id);
-                console.log("Marker primit:", marker);
+                //console.log("Marker primit:", marker);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -269,47 +286,43 @@ document.addEventListener('mapReady', function (event) {
                 body.classList.toggle('form-open');
             });
 
-        L.marker([selectedLatLng.lat, selectedLatLng.lng])
-            .addTo(map)
-            .bindPopup(popupHtml)
-            .openPopup()
-            .on('click', (e) => {
-                // Load the events at selected marker through api call
-                const markerId = returned_marker.id;
-                const lat = returned_marker.latitude;
-                const lng = returned_marker.longitude;
+        const lat = selectedLatLng.lat;
+        const lng = selectedLatLng.lng;
 
-                console.log(markerId);
-                console.log(lat);
-                console.log(lng);
+        const marker = addMarkerIfNotExists(lat, lng, popupHtml, (e) => {
+            const markerId = returned_marker.id;
 
-                if(addingEvent) {
-                    selectedLatLng = {
-                        lat: lat,
-                        lng: lng
-                    };
+            if (addingEvent) {
+                selectedLatLng = { lat, lng };
+                selectedLatLngLabel.innerText = `Location: (${lat.toFixed(4)},${lng.toFixed(4)})`;
 
-                    return;
+                if(currentMarker) {
+                    map.removeLayer(currentMarker);
                 }
+                currentMarker = null;
 
-                fetch(`/api/events?markerId=${markerId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data)
-                        renderEvents(data, menuItems);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching events:', error);
-                        menuItems.innerHTML = '<p>Error loading events.</p>';
-                    });
+                return;
+            }
 
-                if (!sideMenuOpen) {
-                    sideMenuOpen = true;
-                    sideMenu.classList.toggle('active');
-                    mapControls.classList.toggle('shifted');
-                    body.classList.toggle('menu-open');
-                }
-            })
+            fetch(`/api/events?markerId=${markerId}`)
+                .then(response => response.json())
+                .then(data => {
+                    renderEvents(data, menuItems);
+                })
+                .catch(error => {
+                    console.error('Error fetching events:', error);
+                    menuItems.innerHTML = '<p>Error loading events.</p>';
+                });
+
+            if (!sideMenuOpen) {
+                sideMenuOpen = true;
+                sideMenu.classList.toggle('active');
+                mapControls.classList.toggle('shifted');
+                body.classList.toggle('menu-open');
+            }
+        });
+
+        marker.openPopup();
     });
 
     cancelEventBtn.addEventListener('click', () => {

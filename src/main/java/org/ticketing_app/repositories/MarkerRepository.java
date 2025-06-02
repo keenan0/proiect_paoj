@@ -1,6 +1,7 @@
 package org.ticketing_app.repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -9,6 +10,7 @@ import org.ticketing_app.model.Marker;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Optional;
 
 @Repository
 public class MarkerRepository {
@@ -49,6 +51,22 @@ public class MarkerRepository {
             String sql = "UPDATE marker SET latitude = ?, longitude = ?, popup = ? WHERE id = ?";
             jdbcTemplate.update(sql, marker.getLatitude(), marker.getLongitude(), marker.getPopUp(), marker.getId());
             return marker;
+        }
+    }
+
+    public Optional<Marker> findByLatitudeAndLongitude(double latitude, double longitude) {
+        String sql = "SELECT * FROM marker WHERE latitude = ? AND longitude = ?";
+
+        try {
+            Marker marker = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Marker(
+                    rs.getLong("id"),
+                    rs.getDouble("latitude"),
+                    rs.getDouble("longitude"),
+                    rs.getString("popup")
+            ), latitude, longitude);
+            return Optional.of(marker);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 }

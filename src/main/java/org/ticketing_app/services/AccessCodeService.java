@@ -21,6 +21,9 @@ public class AccessCodeService {
     private final TicketingEventRepository eventRepository;
 
     @Autowired
+    private AuditService auditService;
+
+    @Autowired
     public AccessCodeService(
             AccessCodeFactory accessCodeFactory,
             AccessCodeRepository accessCodeRepository,
@@ -44,6 +47,8 @@ public class AccessCodeService {
         accessCode.setOwner(user);
         accessCode.setEvent(event);
         accessCode.generate();
+
+        auditService.logAction("AccessCodeService: Created new access code");
 
         return accessCodeRepository.save(accessCode);
     }

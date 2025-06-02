@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ticketing_app.model.User;
+import org.ticketing_app.services.AuditService;
 import org.ticketing_app.user.UserService;
 
 import java.security.Principal;
@@ -19,6 +20,9 @@ public class AuthController {
     private final UserService userService;
 
     @Autowired
+    private AuditService auditService;
+
+    @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
     }
@@ -29,11 +33,13 @@ public class AuthController {
             User registeredUser = userService.registerUser(user);
             // Don't return the password in the response
             registeredUser.setPassword(null);
+            auditService.logAction("AuthController: Registered user: " + registeredUser);
             return ResponseEntity.ok(registeredUser);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("status", "error");
             response.put("message", e.getMessage());
+            auditService.logAction("AuthController: Could not register user");
             return ResponseEntity.badRequest().body(response);
         }
     }
