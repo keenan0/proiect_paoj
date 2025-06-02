@@ -31,25 +31,24 @@ public class MarkerRepository {
     }
 
     public Marker save(Marker marker) {
-        String checkSql = "SELECT COUNT(*) FROM marker WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(checkSql, Integer.class, marker.getId());
-
-        if (count != null && count == 0) {
+        if (marker.getId() == 0) {
+            // insert and get generated id
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            String insertSql = "INSERT INTO marker (id, latitude, longitude, popup) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO marker (latitude, longitude, popup) VALUES (?, ?, ?)";
             jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(insertSql);
-                ps.setLong(1, marker.getId());
-                ps.setDouble(2, marker.getLatitude());
-                ps.setDouble(3, marker.getLongitude());
-                ps.setString(4, marker.getPopUp());
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setDouble(1, marker.getLatitude());
+                ps.setDouble(2, marker.getLongitude());
+                ps.setString(3, marker.getPopUp());
                 return ps;
-            });
+            }, keyHolder);
+            marker.setId(keyHolder.getKey().longValue());
+            return marker;
         } else {
-            String updateSql = "UPDATE marker SET latitude = ?, longitude = ?, popup = ? WHERE id = ?";
-            jdbcTemplate.update(updateSql, marker.getLatitude(), marker.getLongitude(), marker.getPopUp(), marker.getId());
+            // update existing marker
+            String sql = "UPDATE marker SET latitude = ?, longitude = ?, popup = ? WHERE id = ?";
+            jdbcTemplate.update(sql, marker.getLatitude(), marker.getLongitude(), marker.getPopUp(), marker.getId());
+            return marker;
         }
-
-        return marker;
     }
 }

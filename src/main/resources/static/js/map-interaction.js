@@ -58,8 +58,6 @@ function renderEvents(events, menuDiv) {
 document.addEventListener('mapReady', function (event) {
     console.log("Map is ready.");
 
-    let currentMarkerId = 5353;
-
     const mapId = document.body.dataset.mapId;
     const map = window['leaf' + mapId];
 
@@ -225,15 +223,75 @@ document.addEventListener('mapReady', function (event) {
             ${desc}<br>
         `;
 
-        const marker = L.marker([selectedLatLng.lat, selectedLatLng.lng])
+        let returned_marker = undefined;
+
+        fetch('/api/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                event: {
+                    title: title,
+                    description: desc,
+                    marker: {
+                        id: 0,
+                        latitude: selectedLatLng.lat,
+                        longitude: selectedLatLng.lng,
+                        popUp: popupHtml
+                    }
+                },
+                accessCode: accessCode
+            })
+        })
+            .then(resp => {
+                if (!resp.ok) {
+                    alert("Failed to add event.");
+                    console.log(resp);
+                    throw new Error('Network response was not ok');
+                }
+                return resp.json();
+            })
+            .then(marker => {
+                returned_marker = marker;
+                alert("Event added! Marker ID: " + marker.id);
+                console.log("Marker primit:", marker);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventDesc').value = '';
+                document.getElementById('selectedCoords').innerText = 'Location: ❌';
+
+                addingEvent = false;
+
+                eventForm.classList.toggle('active');
+                body.classList.toggle('form-open');
+            });
+
+        L.marker([selectedLatLng.lat, selectedLatLng.lng])
             .addTo(map)
             .bindPopup(popupHtml)
             .openPopup()
             .on('click', (e) => {
                 // Load the events at selected marker through api call
-                const markerId = currentMarkerId++;
+                const markerId = returned_marker.id;
+                const lat = returned_marker.latitude;
+                const lng = returned_marker.longitude;
 
-                // Make GET call to Spring Boot API
+                console.log(markerId);
+                console.log(lat);
+                console.log(lng);
+
+                if(addingEvent) {
+                    selectedLatLng = {
+                        lat: lat,
+                        lng: lng
+                    };
+
+                    return;
+                }
+
                 fetch(`/api/events?markerId=${markerId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -252,41 +310,6 @@ document.addEventListener('mapReady', function (event) {
                     body.classList.toggle('menu-open');
                 }
             })
-
-        fetch('/api/events', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                event: {
-                    title: title,
-                    description: desc,
-                    marker: {
-                        id: currentMarkerId,
-                        latitude: selectedLatLng.lat,
-                        longitude: selectedLatLng.lng,
-                        popUp: popupHtml
-                    }
-                },
-                accessCode: accessCode
-            })
-        }).then(resp => {
-            if (resp.ok) {
-                alert("Event added!");
-            } else {
-                alert("Failed to add event.");
-                console.log(resp);
-            }
-
-            // Reset the values
-            document.getElementById('eventTitle').value = '';
-            document.getElementById('eventDesc').value = '';
-            document.getElementById('selectedCoords').innerText = 'Location: ❌';
-
-            addingEvent = false;
-
-            eventForm.classList.toggle('active');
-            body.classList.toggle('form-open');
-        });
     });
 
     cancelEventBtn.addEventListener('click', () => {

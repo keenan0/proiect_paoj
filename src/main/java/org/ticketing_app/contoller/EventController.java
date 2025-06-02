@@ -10,6 +10,7 @@ import org.ticketing_app.access_code.AccessCode;
 import org.ticketing_app.access_code.CustomAccessCode;
 import org.ticketing_app.access_code.QrAccessCode;
 import org.ticketing_app.dto.TicketingEventDTO;
+import org.ticketing_app.model.Marker;
 import org.ticketing_app.model.TicketingEvent;
 import org.ticketing_app.model.User;
 import org.ticketing_app.services.MarkerService;
@@ -39,7 +40,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addEvent(@RequestBody TicketingEventDTO payload) {
+    public ResponseEntity<Marker> addEvent(@RequestBody TicketingEventDTO payload) {
         TicketingEvent event = payload.getEvent();
         String accessCodeType = payload.getAccessCode();
         event.setAccessCode(accessCodeType);
@@ -52,9 +53,9 @@ public class EventController {
         event.setUser(currentUser);
 
         System.out.println(event.getMarker());
-        markerService.saveOrUpdate(event.getMarker());
+        Marker db_saved_updated_marker = markerService.saveOrUpdate(event.getMarker());
         service.saveOrUpdate(event);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Event created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(db_saved_updated_marker);
     }
 }
