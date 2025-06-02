@@ -12,6 +12,7 @@ import org.ticketing_app.access_code.QrAccessCode;
 import org.ticketing_app.dto.TicketingEventDTO;
 import org.ticketing_app.model.TicketingEvent;
 import org.ticketing_app.model.User;
+import org.ticketing_app.services.MarkerService;
 import org.ticketing_app.services.TicketingEventService;
 import org.ticketing_app.user.CustomUserDetails;
 
@@ -21,9 +22,11 @@ import java.util.List;
 @RequestMapping("/api/events")
 public class EventController {
     private final TicketingEventService service;
+    private final MarkerService markerService;
 
-    public EventController(TicketingEventService service) {
+    public EventController(TicketingEventService service, MarkerService markerService) {
         this.service = service;
+        this.markerService = markerService;
     }
 
     @GetMapping
@@ -39,21 +42,17 @@ public class EventController {
     public ResponseEntity<String> addEvent(@RequestBody TicketingEventDTO payload) {
         TicketingEvent event = payload.getEvent();
         String accessCodeType = payload.getAccessCode();
+        event.setAccessCode(accessCodeType);
 
-        AccessCode access = switch(accessCodeType.toLowerCase()) {
-            case "qr" -> new QrAccessCode();
-            case "custom" -> new CustomAccessCode();
-            default -> null;
-        };
-
-        event.setAccessCode(access);
-
+        // Get the current user data
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         User currentUser = userDetails.getUser();
 
         event.setUser(currentUser);
 
+        System.out.println(event.getMarker());
+        markerService.saveOrUpdate(event.getMarker());
         service.saveOrUpdate(event);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Event created");

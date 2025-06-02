@@ -12,7 +12,7 @@ public class TicketingEvent {
     private Marker marker;
     private User user;
 
-    private AccessCode accessCode;
+    private String accessCode;
 
     public TicketingEvent() {}
 
@@ -26,7 +26,7 @@ public class TicketingEvent {
         this.user = null;
     }
 
-    public TicketingEvent(String title, String description, Marker marker, AccessCode accessCode) {
+    public TicketingEvent(String title, String description, Marker marker, String accessCode) {
         // Constructor with access code
         this.title = title;
         this.description = description;
@@ -36,7 +36,7 @@ public class TicketingEvent {
         this.user = null;
     }
 
-    public TicketingEvent(String title, String description, Marker marker, AccessCode accessCode, User user) {
+    public TicketingEvent(String title, String description, Marker marker, String accessCode, User user) {
         // Constructor with access code
         this.title = title;
         this.description = description;
@@ -61,8 +61,8 @@ public class TicketingEvent {
     public User getUser() {return user;}
     public void setUser(User user) {this.user = user;}
 
-    public void setAccessCode(AccessCode accessCode) { this.accessCode = accessCode; }
-    public AccessCode getAccessCode() { return accessCode; }
+    public void setAccessCode(String accessCode) { this.accessCode = accessCode; }
+    public String getAccessCode() { return accessCode; }
 
     @Override
     public String toString() {

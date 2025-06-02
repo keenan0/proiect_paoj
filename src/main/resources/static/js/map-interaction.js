@@ -24,9 +24,27 @@ function renderEvents(events, menuDiv) {
         desc.textContent = event.description;
 
         const button = document.createElement('button');
-        button.textContent = 'View Details';
+        button.textContent = 'Join Event';
         button.onclick = () => {
-            alert(`Event ID: ${event.id}`);
+            // User with id (whatever user id the current user has) will own an accesscode in the db
+
+            console.log(event);
+
+            fetch('/api/access-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event: event,
+                    accessCode: event.accessCode
+                })
+            }).then(resp => {
+                if (resp.ok) {
+                    alert(`You joined ${event.title}!`);
+                } else {
+                    alert("Failed to join event.");
+                    console.log(resp);
+                }
+            });
         };
 
         eventDiv.appendChild(title);
@@ -39,6 +57,8 @@ function renderEvents(events, menuDiv) {
 
 document.addEventListener('mapReady', function (event) {
     console.log("Map is ready.");
+
+    let currentMarkerId = 5353;
 
     const mapId = document.body.dataset.mapId;
     const map = window['leaf' + mapId];
@@ -66,7 +86,6 @@ document.addEventListener('mapReady', function (event) {
     let addingEvent = false;
     let sideMenuOpen = false;
     let eventsSideMenuOpen = false;
-    let mapControlsShifted = false;
 
     let selectedLatLng = null;
     let currentMarker = null;
@@ -179,7 +198,7 @@ document.addEventListener('mapReady', function (event) {
                 map.removeLayer(currentMarker);
             }
 
-            currentMarker = L.marker([selectedLatLng.lat, selectedLatLng.lng]).addTo(map);
+            currentMarker = L.marker([selectedLatLng.lat, selectedLatLng.lng], { markerId: 1 }).addTo(map);
 
             selectedLatLngLabel.innerText = `Location: (${selectedLatLng.lat.toFixed(4)},${selectedLatLng.lng.toFixed(4)})`;
         }
@@ -209,7 +228,30 @@ document.addEventListener('mapReady', function (event) {
         const marker = L.marker([selectedLatLng.lat, selectedLatLng.lng])
             .addTo(map)
             .bindPopup(popupHtml)
-            .openPopup();
+            .openPopup()
+            .on('click', (e) => {
+                // Load the events at selected marker through api call
+                const markerId = currentMarkerId++;
+
+                // Make GET call to Spring Boot API
+                fetch(`/api/events?markerId=${markerId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        renderEvents(data, menuItems);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching events:', error);
+                        menuItems.innerHTML = '<p>Error loading events.</p>';
+                    });
+
+                if (!sideMenuOpen) {
+                    sideMenuOpen = true;
+                    sideMenu.classList.toggle('active');
+                    mapControls.classList.toggle('shifted');
+                    body.classList.toggle('menu-open');
+                }
+            })
 
         fetch('/api/events', {
             method: 'POST',
@@ -219,7 +261,7 @@ document.addEventListener('mapReady', function (event) {
                     title: title,
                     description: desc,
                     marker: {
-                        id: 0,
+                        id: currentMarkerId,
                         latitude: selectedLatLng.lat,
                         longitude: selectedLatLng.lng,
                         popUp: popupHtml
