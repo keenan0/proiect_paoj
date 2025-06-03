@@ -63,4 +63,12 @@ public class MapConfig {
     public void setTileLayer(TileLayer tileLayer) {
         this.tileLayer = tileLayer;
     }
+
+    @Override
+    public String toString() {
+        return "MapConfig{" +
+                "events=" + events +
+                ", mapId='" + mapId + '\'' +
+                '}';
+    }
 }

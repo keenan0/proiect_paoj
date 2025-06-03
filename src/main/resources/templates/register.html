@@ -75,7 +75,7 @@
 <form th:action="@{/register}" th:object="${user}" method="post">
     <div>
         <label>Username:</label>
-        <input type="text" th:field="*{username}" required minlength="3"/>
+        <input type="text" th:field="*{username}" required minlength="3" autocomplete="off"/>
     </div>
     <div>
         <label>Password:</label>
@@ -83,7 +83,7 @@
     </div>
     <div>
         <label>Email:</label>
-        <input type="email" th:field="*{email}" required/>
+        <input type="email" th:field="*{email}" required autocomplete="off"/>
     </div>
     <div>
         <button type="submit">Register</button>

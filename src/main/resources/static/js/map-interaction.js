@@ -55,6 +55,63 @@ function renderEvents(events, menuDiv) {
     });
 }
 
+function renderUserTickets(accessCodes, menuDiv) {
+    /*
+    *   Used by the fetch call / get request to /api/events when a marker is clicked.
+    *
+    *   @accessCodes - list of AccessCodes returned by the api call
+    *   @menuDiv - the div where the data should be added
+    * */
+
+    menuDiv.innerHTML = ''; // Clear previous content
+
+    if (events.length === 0) {
+        menuDiv.innerHTML = '<p>No active tickets.</p>';
+        return;
+    }
+
+    accessCodes.forEach(accessCode => {
+        const eventDiv = document.createElement('div');
+        eventDiv.classList.add('event');
+
+        const title = document.createElement('h5');
+        title.textContent = event.title;
+
+        const desc = document.createElement('p');
+        desc.textContent = event.description;
+
+        const button = document.createElement('button');
+        button.textContent = 'Join Event';
+        button.onclick = () => {
+            // User with id (whatever user id the current user has) will own an accesscode in the db
+
+            console.log(event);
+
+            fetch('/api/access-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event: event,
+                    accessCode: event.accessCode
+                })
+            }).then(resp => {
+                if (resp.ok) {
+                    alert(`You joined ${event.title}!`);
+                } else {
+                    alert("Failed to join event.");
+                    console.log(resp);
+                }
+            });
+        };
+
+        eventDiv.appendChild(title);
+        eventDiv.appendChild(desc);
+        eventDiv.appendChild(button);
+
+        menuDiv.appendChild(eventDiv);
+    });
+}
+
 document.addEventListener('mapReady', function (event) {
     console.log("Map is ready.");
 
@@ -143,6 +200,10 @@ document.addEventListener('mapReady', function (event) {
             mapControls.classList.toggle('shifted');
             body.classList.toggle('menu-open');
         }
+
+        console.log("Open tickets menu")
+
+
 
         eventsSideMenu.classList.toggle('active');
         eventsSideMenuOpen = !eventsSideMenuOpen;

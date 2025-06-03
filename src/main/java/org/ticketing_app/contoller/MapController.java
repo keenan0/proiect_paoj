@@ -67,6 +67,8 @@ public class MapController {
 
         MapConfig mapConfig = mapBuilder.build();
 
+        System.out.println(mapConfig);
+
         model.addAttribute("mapId", mapConfig.getMapId());
         model.addAttribute("mapDiv", mapService.generateMapDiv(mapConfig));
         model.addAttribute("mapScript", mapService.generateMapScript(mapConfig));

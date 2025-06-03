@@ -32,6 +32,8 @@ public class AccessCodeController {
 
         Long userId = currentUser.getId();
 
+        System.out.println("TEST");
+
         AccessCode code = accessCodeService.createAccessCode(request.getAccessCode(), userId, request.getEvent().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(code);

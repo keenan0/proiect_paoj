@@ -34,3 +34,4 @@ CREATE TABLE access_code (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE
 );
+

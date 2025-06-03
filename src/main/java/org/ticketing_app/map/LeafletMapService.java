@@ -52,7 +52,7 @@ public class LeafletMapService {
             if(!renderedMarkers.contains(marker)) {
                 js.append(String.format(
                         Locale.US,
-                        "L.marker([%.6f, %.6f], { markerId: %d }).addTo(%s).bindPopup('%s');\n",
+                        "L.marker([%.6f, %.6f], { markerId: %d }).addTo(%s).bindPopup(`%s`);\n",
                         marker.getLatitude(), marker.getLongitude(),
                         marker.getId(),
                         mapName,
@@ -68,6 +68,8 @@ public class LeafletMapService {
                 "document.dispatchEvent(new CustomEvent('mapReady', { detail: 'leaf%s' }));\nconsole.log('Initialised leaflet map.');\n",
                 config.getMapId()
         ));
+
+        System.out.println(js.toString());
 
         return js.toString();
     }

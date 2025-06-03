@@ -55,7 +55,9 @@ public class AccessCodeRepository {
             return ps;
         }, keyHolder);
 
-        accessCode.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        Number id = (Number) keyHolder.getKeys().get("ID");
+        accessCode.setId(id.longValue());
+
         return accessCode;
     }
 
